@@ -1,5 +1,6 @@
 import loadable from "@loadable/component";
 import { useEffect } from "react";
+const PlacedProduct = loadable(() => import("./Components/PlacedProduct"));
 const Payment = loadable(() => import("./Components/Payment"));
 const ShippingInfo = loadable(() => import("./Components/ShippingInfo"));
 const Success = loadable(() => import("./Components/Success"));
@@ -24,7 +25,9 @@ export default function Checkout({ activeStep, toggleActiveStep }: IProps) {
         {activeStep == 1 && <Payment toggleActiveStep={toggleActiveStep} />}
         {activeStep == 2 && <Success />}
       </div>
-      <div className="w-1/3">{activeStep != 2 ? <TotalBill /> : null}</div>
+      <div className="w-1/3">
+        {activeStep != 2 ? <TotalBill /> : <PlacedProduct />}
+      </div>
     </div>
   );
 }

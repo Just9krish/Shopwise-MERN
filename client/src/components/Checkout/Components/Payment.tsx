@@ -10,7 +10,6 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { GrPowerReset } from "react-icons/gr";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { IShippingAddress } from "../../../Interface";
 import { server } from "../../../server";
 import style from "../../../styles/style";
 
@@ -128,6 +127,7 @@ export default function Payment({ toggleActiveStep }: IProps) {
             localStorage.setItem("cartItems", JSON.stringify([]));
             localStorage.removeItem("shipping_address");
             localStorage.setItem("cartPrice", JSON.stringify(0));
+            localStorage.setItem("latestorder", JSON.stringify(data));
             dispatch({ type: "clearCart" });
             toggleActiveStep(2);
           }
@@ -183,6 +183,7 @@ export default function Payment({ toggleActiveStep }: IProps) {
       localStorage.setItem("cartItems", JSON.stringify([]));
       localStorage.removeItem("shipping_address");
       localStorage.setItem("cartPrice", JSON.stringify(0));
+      localStorage.setItem("latestorder", JSON.stringify(data));
       dispatch({ type: "clearCart" });
 
       toggleActiveStep(2);

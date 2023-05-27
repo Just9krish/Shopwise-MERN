@@ -6,12 +6,11 @@ type Props = {
 };
 
 export default function Countdown({ endDate, startDate }: Props) {
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [timeUp, setTimeUp] = useState(false);
   const [showStartCountdown, setShowStartCountdown] = useState(false);
   const [startTimer, setStartTimer] = useState<any>(null);
-  const [timeUp, setTimeUp] = useState(false);
 
-  function calculateTimeLeft(): Record<string, number> {
+  const calculateTimeLeft = (): Record<string, number> => {
     const endTime: Date = new Date(endDate);
     const difference: number = Date.parse(endTime.toString()) - Date.now();
 
@@ -33,19 +32,16 @@ export default function Countdown({ endDate, startDate }: Props) {
     if (difference > 0) {
       timeLeft = { days, hours, minutes, seconds };
     } else {
-      timeLeft = { hours: "00", minutes: "00", seconds: "00" };
       setTimeUp(true);
+      timeLeft = { hours: "00", minutes: "00", seconds: "00" };
     }
 
     return timeLeft;
-  }
+  };
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [timeLeft]);
+  const [timeLeft, setTimeLeft] = useState<Record<string, number>>(() =>
+    calculateTimeLeft()
+  );
 
   useEffect(() => {
     const today = new Date().setHours(0, 0, 0, 0);

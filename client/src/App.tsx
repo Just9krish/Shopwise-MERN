@@ -5,7 +5,12 @@ import { getAllProducts } from "./redux/actions/allProductsActions";
 import { loadUser } from "./redux/actions/userActions";
 import { useEffect, useLayoutEffect } from "react";
 import { loadSeller } from "./redux/actions/sellerActions";
+import { getAllEvents } from "./redux/actions/eventsActions";
 import { useState } from "react";
+import { server } from "./server";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
 import store from "./redux/store";
 import loadable from "@loadable/component";
 
@@ -23,9 +28,12 @@ const SignupPage = loadable(() => import("./pages/User/SignupPage"));
 const BestSelling = loadable(() => import("./pages/BestSelling"));
 const EventsPage = loadable(() => import("./pages/EventsPage"));
 const FAQ = loadable(() => import("./pages/FAQPage"));
-import ProfilePage from "./pages/User/ProfilePage";
-import axios from "axios";
-import { server } from "./server";
+const ProfilePage = loadable(() => import("./pages/User/ProfilePage"));
+const ShopCuponsPage = loadable(() => import("./pages/Seller/ShopCuponsPage"));
+const NotFound = loadable(() => import("./components/404/NotFound"));
+const CheckoutPage = loadable(() => import("./pages/User/CheckoutPage"));
+const ShopHomePage = loadable(() => import("./pages/Seller/ShopHomePage"));
+
 const CreateShop = loadable(
   () => import("./pages/Seller/SellerAuth/CreateShopPage")
 );
@@ -35,7 +43,6 @@ const SellerActivationPage = loadable(
 const ShopLoginPage = loadable(
   () => import("./pages/Seller/SellerAuth/ShopLoginPage")
 );
-const ShopHomePage = loadable(() => import("./pages/Seller/ShopHomePage"));
 const ShopDashboardPage = loadable(
   () => import("./pages/Seller/ShopDashboardPage")
 );
@@ -48,23 +55,16 @@ const SellerProductsPage = loadable(
 const SellerCreatEventPage = loadable(
   () => import("./pages/Seller/SellerCreatEventPag")
 );
-const ShopCuponsPage = loadable(() => import("./pages/Seller/ShopCuponsPage"));
-const NotFound = loadable(() => import("./components/404/NotFound"));
-const CheckoutPage = loadable(() => import("./pages/User/CheckoutPage"));
 const ShopAllEventsPage = loadable(
   () => import("./pages/Seller/ShopAllEventsPage")
 );
-
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { useAppSelector } from "./hooks";
-import SellerAllOrdersPage from "./pages/Seller/SellerAllOrdersPage";
-import { getAllEvents } from "./redux/actions/eventsActions";
+const SellerAllOrdersPage = loadable(
+  () => import("./pages/Seller/SellerAllOrdersPage")
+);
 
 function App() {
   const [appState, setAppState] = useState(false);
   const [stripePromise, setStripePromise] = useState<string | null>(null);
-  const { cart } = useAppSelector((state) => state.cart);
 
   async function getStripeSecretKey() {
     const { data } = await axios.get(`${server}/payments/stripe-secret-key`);

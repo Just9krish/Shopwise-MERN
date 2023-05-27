@@ -18,10 +18,16 @@ exports.createOrder = async (req, res, next) => {
       req.body;
 
     let { paidPrice } = req.body;
+    let paidAt;
+    let isPaid = true;
 
     if (!paidPrice) {
       const totalPrice = await calculateCartPrice(cartWithIDandQty, couponID);
       paidPrice = totalPrice;
+      isPaid = false;
+    } else {
+      paidAt = new Date();
+      isPaid = true;
     }
 
     if (!cartWithIDandQty || !shippingAddress || !paidPrice || !paymentInfo) {
@@ -58,12 +64,18 @@ exports.createOrder = async (req, res, next) => {
         user: userId,
         totalPrice: paidPrice,
         paymentInfo,
+        paidAt,
         shop: shopId,
       });
-      orders.push(order);
+
+      const populatedOrder = await Order.findById(order._id).populate(
+        "cart.product"
+      );
+
+      orders.push(populatedOrder);
     }
 
-    res.status(201).json({ success: true, orders });
+    res.status(201).json({ orders, totalPrice: paidPrice, isPaid });
   } catch (error) {
     console.log(error);
     next(new ErrorHandler(error.message, 500));

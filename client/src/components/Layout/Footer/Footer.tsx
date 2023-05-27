@@ -111,7 +111,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="text-center text-xs lg:text-xl lg:text-left md:mb-1">
-          <p>&copy; Copyright 2022 E-Shop. All rights reservered.</p>
+          <p>&copy; Copyright 2022 Shopwise. All rights reservered.</p>
         </div>
       </div>
     </footer>
