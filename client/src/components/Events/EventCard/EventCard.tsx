@@ -26,8 +26,6 @@ export default function EventCard({ event }: Props) {
     startDate,
   } = event;
 
-  console.log(endDate);
-
   return (
     <div
       className="w-full bg-white rounded-lg flex flex-col lg:flex-row

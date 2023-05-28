@@ -285,7 +285,7 @@ export default function ShippingInfo({ toggleActiveStep }: IProps) {
               </label>
               <div className={`${style.flex_normal} gap-12`}>
                 {addresses?.map((address) => (
-                  <div>
+                  <div key={address._id}>
                     <input
                       type="checkbox"
                       name="address"
