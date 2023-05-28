@@ -75,6 +75,13 @@ export default function Countdown({ endDate, startDate }: Props) {
     };
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [timeLeft]);
+
   return (
     <span className="text-xl text-[#ff7d1a] font-semibold">
       {showStartCountdown ? (
