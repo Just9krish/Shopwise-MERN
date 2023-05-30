@@ -88,9 +88,10 @@ export default function PlacedProduct() {
                     <p className="text-gray-600 text-sm">
                       Price:
                       {formattedPrice(
-                        orderProduct.product.discount_percentage > 0
-                          ? orderProduct.product.discount_price
-                          : orderProduct.product.price
+                        orderProduct.quantity *
+                          (orderProduct.product.discount_percentage > 0
+                            ? orderProduct.product.discount_price
+                            : orderProduct.product.price)
                       )}
                     </p>
                   </div>

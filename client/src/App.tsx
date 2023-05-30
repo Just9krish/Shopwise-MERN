@@ -64,12 +64,16 @@ const SellerAllOrdersPage = loadable(
 
 function App() {
   const [appState, setAppState] = useState(false);
-  const [stripePromise, setStripePromise] = useState<string | null>(null);
+  const [stripeKey, setStripeKey] = useState<string | null>(null);
 
   async function getStripeSecretKey() {
     const { data } = await axios.get(`${server}/payments/stripe-secret-key`);
-    setStripePromise(data);
+    setStripeKey(data);
   }
+
+  useEffect(() => {
+    getStripeSecretKey();
+  }, []);
 
   useLayoutEffect(() => {
     Promise.all([
@@ -78,10 +82,6 @@ function App() {
       store.dispatch(getAllProducts()),
       store.dispatch(getAllEvents()),
     ]).then(() => setAppState(!appState));
-  }, []);
-
-  useEffect(() => {
-    getStripeSecretKey();
   }, []);
 
   if (!appState) {
@@ -94,8 +94,8 @@ function App() {
 
   return (
     <BrowserRouter>
-      {stripePromise && (
-        <Elements stripe={loadStripe(stripePromise)}>
+      {stripeKey && stripeKey.length > 0 && (
+        <Elements stripe={loadStripe(stripeKey)}>
           <Routes>
             <Route
               path="/checkout"
