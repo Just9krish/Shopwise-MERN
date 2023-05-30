@@ -1,9 +1,9 @@
+import loadable from "@loadable/component";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../../hooks";
 import { IProduct } from "../../../Interface";
-// import Products from "../../../constant/product.json";
 import style from "../../../styles/style";
-import Product from "../../Product/Product";
+const Product = loadable(() => import("../../Product/Product"));
 
 interface IProps {
   product: IProduct;

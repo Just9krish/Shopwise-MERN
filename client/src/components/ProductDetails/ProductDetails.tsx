@@ -58,7 +58,9 @@ export default function ProductDetails({ product }: { product: IProduct }) {
         <div className="w-full lg:w-1/2">
           <div className="space-y-10 px-3 py-9 lg:p-10">
             <h1 className={`${style.productTitle}`}>{name}</h1>
-            <p className="text-sm lg:text-base">{description}</p>
+            <p className="text-sm lg:text-base">
+              {description.slice(0, 599)}.....
+            </p>
             <div>
               <h4 className="text-green-700 font-semibold text-lg">
                 Deal of a Day

@@ -1,16 +1,20 @@
 import loadable from "@loadable/component";
+import style from "../styles/style";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { IProduct } from "../Interface";
+import { Link } from "react-router-dom";
+import { useAppSelector } from "../hooks";
+import { host, server } from "../server";
+import axios from "axios";
+
 const ProductDetails = loadable(
   () => import("../components/ProductDetails/ProductDetails")
 );
-import { IProduct } from "../Interface";
-import Loader from "../components/Loader/Loader";
-import style from "../styles/style";
-import { Link } from "react-router-dom";
-import RelatedProducts from "../components/ProductDetails/RelatedProducts/RelatedProducts";
-import { useAppSelector } from "../hooks";
-import { host } from "../server";
+const Loader = loadable(() => import("../components/Loader/Loader"));
+const RelatedProducts = loadable(
+  () => import("../components/ProductDetails/RelatedProducts/RelatedProducts")
+);
 
 export default function ProductPage() {
   const { product_id } = useParams();
@@ -49,11 +53,19 @@ export default function ProductPage() {
 
 const ProductDetailsInfo = ({ product }: { product: IProduct }) => {
   const [activeTab, setActiveTab] = useState("productDetails");
+  const [shopProducts, setShopProducts] = useState(0);
   const { images, name, description, shop } = product;
 
   const handleTabClick = (tabName: string) => {
     setActiveTab(tabName);
   };
+
+  useEffect(() => {
+    axios
+      .get(`${server}/shops/${shop._id}/products`)
+      .then((res) => setShopProducts(res.data.products.length));
+  }, []);
+
   return (
     <div className="bg-white lg:px-10 rounded my-16 px-3 py-6">
       <div className="w-full flex justify-between border-b py-4">
@@ -85,29 +97,13 @@ const ProductDetailsInfo = ({ product }: { product: IProduct }) => {
       {activeTab === "productDetails" && (
         <div className="space-y-6 lg:space-y-10 px-4 lg:px-8 py-5">
           <p className="text-base lg:text-lg whitespace-pre-line">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ratione
-            quos dolor, assumenda tempore optio laboriosam saepe porro quaerat
-            magni fuga iure ducimus, dignissimos exercitationem dicta quisquam
-            nulla sint. Consequatur, atque. Lorem ipsum dolor sit amet
-            consectetur adipisicing elit. Illum animi ut labore eaque, fugiat
-            vitae adipisci officia modi. Facere dolorum, natus in eligendi iure
-            cumque repellendus illo aut cum quis.
+            {description.slice(0, 500)}
           </p>
           <p className="text-base lg:text-lg whitespace-pre-line">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam odio
-            error aut incidunt fuga voluptatibus accusantium earum cupiditate
-            quidem optio, fugit voluptas, in molestias dignissimos asperiores
-            deleniti! Alias, laborum ut?
+            {description.slice(501, 1000)}
           </p>
           <p className="text-base lg:text-lg whitespace-pre-line">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam odio
-            error aut incidunt fuga voluptatibus accusantium earum cupiditate
-            quidem optio, fugit voluptas, in molestias dignissimos asperiores
-            deleniti! Alias, laborum ut? Lorem ipsum dolor, sit amet consectetur
-            adipisicing elit. Ad, expedita voluptatum a ipsum eos delectus alias
-            reprehenderit voluptates eligendi placeat blanditiis aliquid dolorem
-            dolor commodi, consequuntur ut! Suscipit necessitatibus id, unde
-            delectus fugiat provident.
+            {description.slice(1001, 1500)}
           </p>
         </div>
       )}
@@ -118,33 +114,27 @@ const ProductDetailsInfo = ({ product }: { product: IProduct }) => {
       )}
       {activeTab === "seller" && (
         <div className="w-full p-5 lg:flex">
-          <div className="w-full lg:w-1/2 space-y-8">
+          <div className="w-full lg:w-1/2 space-y-3">
             <div className={`${style.flex_normal} gap-3`}>
               <img
                 className="h-12 w-12 rounded-full"
                 src={`${host}/${shop.avatar}`}
-                alt=""
               />
               <div>
                 <h4 className={`${style.shop_name} text-xl`}>{shop.name}</h4>
                 {/* <h4>{shop.ratings} Ratings</h4> */}
               </div>
             </div>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              laborum, eos voluptates odit architecto suscipit deserunt rerum
-              dolorem eum, quas vel temporibus, eius cupiditate? Sunt deleniti
-              quisquam incidunt architecto veniam?
-            </p>
+            <p>{shop.address}</p>
           </div>
           <div className="w-full lg:w-1/2 lg:flex flex-col items-end">
             <div className="text-left space-y-2">
               <h4 className="font-medium">
-                Joined on :{" "}
+                Joined on :
                 <span>{new Date(shop.createdAt).toLocaleDateString()}</span>
               </h4>
               <h4 className="font-medium">
-                Total Products : <span>123</span>
+                Total Products : <span>{shopProducts}</span>
               </h4>
               <h4 className="font-medium">
                 Total Reviews : <span>23</span>
