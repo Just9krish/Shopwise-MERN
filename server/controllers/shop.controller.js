@@ -353,9 +353,9 @@ exports.deleteSingleCoupon = async (req, res, next) => {
 // get shop all orders
 exports.getShopAllOrders = async (req, res, next) => {
   try {
-    const shopId = req.shop.id;
+    const sellerId = req.seller.id;
 
-    const orders = await Order.find({ shop: shopId });
+    const orders = await Order.find({ shop: sellerId });
 
     res.status(200).json({ success: true, orders });
   } catch (error) {

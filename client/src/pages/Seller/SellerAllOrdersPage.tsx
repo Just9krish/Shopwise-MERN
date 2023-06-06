@@ -15,7 +15,7 @@ export default function SellerAllOrdersPage() {
       <ShopHeader />
       <section>
         <div className="flex gap-2 md:gap-5 mt-3">
-          <ShopSidebar activeTab={5} />
+          <ShopSidebar activeTab={2} />
           <div className="w-full flex-grow flex overflow-x-scroll rounded bg-white shadow h-[87vh]">
             <ShopOrders />
           </div>
