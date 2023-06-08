@@ -41,8 +41,6 @@ export default function PlacedProduct() {
     }
   }, []);
 
-  console.log(orderProducts);
-
   return (
     <div className="bg-white shadow px-6 py-8">
       <p className="font-Poppins font-extralight text-sm">

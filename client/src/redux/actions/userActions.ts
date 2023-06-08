@@ -36,7 +36,6 @@ export const loadUser = () => async (dispatch: Dispatch<Action>) => {
 
 export const updateUserInfo =
   (form: IFrom) => async (dispatch: Dispatch<Action>) => {
-    console.log(form);
     try {
       dispatch({ type: "UpdateUserInfoRequest" });
       const { data } = await axios.put(`${server}/users/profile`, form, {

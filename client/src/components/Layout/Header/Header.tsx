@@ -1,7 +1,6 @@
 import loadable from "@loadable/component";
 import logo from "../../../assets/shopwise.png";
 import style from "../../../styles/style";
-import productData from "../../../constant/product.json";
 import {
   AiOutlineHeart,
   AiOutlineSearch,

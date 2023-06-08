@@ -1,3 +1,4 @@
+import { GridCellParams } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { AiOutlineEye } from "react-icons/ai";
@@ -15,7 +16,6 @@ export default function ShopOrders() {
     });
 
     setShopOrders(data.orders);
-    console.log(data.orders);
   }
 
   useEffect(() => {
