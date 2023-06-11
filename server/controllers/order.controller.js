@@ -46,18 +46,23 @@ exports.createOrder = async (req, res, next) => {
         shopItemsMap.set(shopId, []);
       }
 
+      const foundItem = cartWithIDandQty.find(
+        (item) => item.productId === product._id.toString()
+      );
       const transformed = {
         product: product._id.toString(),
-        quantity:
-          cartWithIDandQty?.find(
-            (item) => item.productId === product._id.toString()
-          )?.productQuantity || 0,
+        quantity: foundItem ? foundItem.productQuantity : 0,
       };
+
       shopItemsMap.get(shopId).push(transformed);
+      console.log(transformed);
     }
+
     const orders = [];
 
     for (const [shopId, products] of shopItemsMap) {
+      console.log(products);
+
       const order = await Order.create({
         cart: products,
         shippingAddress,

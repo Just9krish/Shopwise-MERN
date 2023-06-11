@@ -1,4 +1,3 @@
-import { ClassNamesProps } from "@emotion/react";
 import { DataGrid, GridCellParams } from "@mui/x-data-grid";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -6,13 +5,23 @@ import { AiOutlineArrowRight, AiOutlineEye } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { formattedPrice } from "../../../helper/formatPrice";
 import { useAppSelector } from "../../../hooks";
+import { IOrder } from "../../../Interface";
 import { server } from "../../../server";
 import Loader from "../../Loader/Loader";
 
+type Row = {
+  id: string;
+  itemsQty: number;
+  total: string;
+  status: string;
+};
+
 export default function ShopOrders() {
-  const [ShopOrders, setShopOrders] = useState([]);
+  const [ShopOrders, setShopOrders] = useState<IOrder[]>([]);
   const { seller } = useAppSelector((state) => state.seller);
   const [isLoading, setIsLoading] = useState(false);
+
+  console.log(ShopOrders);
 
   async function getShopOrders() {
     setIsLoading(true);
@@ -84,9 +93,9 @@ export default function ShopOrders() {
     },
   ];
 
-  const row: any = [];
+  const row: Row[] = [];
 
-  ShopOrders.forEach((order: any) => {
+  ShopOrders.forEach((order) => {
     row.push({
       id: order._id,
       itemsQty: order.cart.length,
