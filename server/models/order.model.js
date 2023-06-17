@@ -78,6 +78,7 @@ const orderSchema = new mongoose.Schema(
       type: String,
       enum: ["Processing", "Shipped", "Delivered", "Cancelled"],
       default: "Processing",
+      required: true,
     },
     paymentInfo: {
       id: {
@@ -85,16 +86,20 @@ const orderSchema = new mongoose.Schema(
       },
       status: {
         type: String,
+        required: true,
       },
       paymentMethod: {
         type: String,
+        required: true,
       },
     },
     paidAt: {
       type: Date,
+      default: null,
     },
     deliveredAt: {
       type: Date,
+      default: null,
     },
   },
   { timestamps: true }

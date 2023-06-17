@@ -224,6 +224,7 @@ export interface IPaymentInfo {
 export interface IShippingAddress extends IAddress {
   primaryNumber: number;
   alternateNumber: number;
+  fullname: string;
 }
 
 export interface IOrder {
@@ -232,6 +233,24 @@ export interface IOrder {
   _id: string;
   cart: {
     product: string;
+    quantity: number;
+    _id: string;
+  }[];
+  user: string;
+  totalPrice: number;
+  orderStatus: string;
+  paidAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+}
+
+export interface IShopOrder {
+  shippingAddress: IShippingAddress;
+  paymentInfo: IPaymentInfo;
+  _id: string;
+  cart: {
+    product: IProduct;
     quantity: number;
     _id: string;
   }[];

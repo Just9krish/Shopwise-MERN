@@ -355,7 +355,9 @@ exports.getShopAllOrders = async (req, res, next) => {
   try {
     const sellerId = req.seller.id;
 
-    const orders = await Order.find({ shop: sellerId });
+    const orders = await Order.find({ shop: sellerId }).populate(
+      "cart.product"
+    );
 
     res.status(200).json({ success: true, orders });
   } catch (error) {

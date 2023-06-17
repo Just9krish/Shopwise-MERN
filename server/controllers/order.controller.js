@@ -55,14 +55,11 @@ exports.createOrder = async (req, res, next) => {
       };
 
       shopItemsMap.get(shopId).push(transformed);
-      console.log(transformed);
     }
 
     const orders = [];
 
     for (const [shopId, products] of shopItemsMap) {
-      console.log(products);
-
       const order = await Order.create({
         cart: products,
         shippingAddress,
@@ -91,7 +88,7 @@ exports.getOrders = async (req, res, next) => {
   try {
     const orders = await Order.find().populate("cart.product").populate("user");
 
-    res.json(orders);
+    res.status(200).json(orders);
   } catch (error) {
     console.log(error);
     next(new ErrorHandler(error.message, 500));
