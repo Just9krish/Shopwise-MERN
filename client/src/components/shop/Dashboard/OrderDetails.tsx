@@ -42,32 +42,32 @@ export default function OrderDetails() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center gap-4">
-          <BsBagFill className="text-orange-500" size={30} />
-          <h3 className="text-2xl font-bold">Order Details</h3>
+          <BsBagFill className="text-orange-500" size="30" />
+          <h1 className="text-2xl font-bold">Order Details</h1>
         </div>
-        <Link to="/shop-orders">
+        <a href="/shop-orders">
           <button className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded">
             Order List
           </button>
-        </Link>
+        </a>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-7 shadow p-4 md:p-8 bg-white rounded-md">
-        <div className="mb-8 md:mb-0">
-          <h4 className="text-lg">
-            Order Id: <span>{selectedOrder?._id}</span>
-          </h4>
-
-          <h4 className="text-lg mt-2">
-            Placed on:{" "}
-            <span>
+      <section className="flex flex-col md:flex-row justify-between gap-4 md:gap-7 shadow p-4 md:p-8 bg-white rounded-md">
+        <article className="mb-8 md:mb-0 space-y-2">
+          <div>
+            <h2 className="text-lg text-[#201f13]">Order Id:</h2>
+            <span className="text-[#4a4a4a]">{selectedOrder?._id}</span>
+          </div>
+          <div>
+            <h2 className="text-lg  text-[#201f13]">Placed on:</h2>
+            <span className="text-[#4a4a4a]">
               {selectedOrder &&
                 new Date(selectedOrder.createdAt).toLocaleString()}
             </span>
-          </h4>
-        </div>
+          </div>
+        </article>
 
-        <div className="md:w-2/5">
+        <section className="md:w-2/5">
           {selectedOrder?.cart.map((item) => {
             const { _id, product, quantity } = item;
             const { name, price, images, category, discount_price } = product;
@@ -77,63 +77,116 @@ export default function OrderDetails() {
                 key={_id}
                 className="flex items-center gap-4 py-4 border-b border-gray-300"
               >
-                <img
-                  src={`${host}/${images[0].url}`}
-                  alt={images[0]?.name}
-                  className="w-16 h-16 object-cover rounded-lg"
-                />
+                <Link to={`/products/${product._id}`}>
+                  <img
+                    src={`${host}/${images[0].url}`}
+                    alt={images[0]?.name || "Product image"}
+                    className="w-16 h-16 object-cover rounded-lg"
+                  />
+                </Link>
                 <div>
-                  <h5 className="text-xl font-semibold">{name}</h5>
-                  <h5>
+                  <Link to={`/products/${product._id}`}>
+                    <h3 className="text-xl font-semibold  text-[#201f13] hover:underline hover:text-orange-500 transition-all">
+                      {name}
+                    </h3>
+                  </Link>
+                  <h3 className="text-[#4a4a4a] tracking-wider">
                     {formattedPrice(discount_price)} x {quantity}
-                  </h5>
+                  </h3>
                 </div>
               </div>
             );
           })}
 
-          <div className="mt-6">
-            <h5 className="text-lg">
-              Total Price:{" "}
+          <div className="mt-6 flex items-center gap-2 justify-end">
+            <span className="text-lg text-[#201f13]">Total Price:</span>
+            <span className="tracking-wide">
               <strong>
                 {selectedOrder && formattedPrice(selectedOrder.totalPrice)}
               </strong>
-            </h5>
+            </span>
           </div>
-        </div>
+        </section>
 
-        <div className="md:w-2/5">
+        <section className="md:w-2/5">
           <div className="mt-6 md:mt-0 md:ml-6">
-            <h5 className="text-lg font-semibold">Shipping Address :</h5>
-            <h5>{selectedOrder && selectedOrder.shippingAddress?.fullname}</h5>
-            <h5>
+            <h2 className="text-lg font-semibold text-[#201f13]">
+              Shipping Address:
+            </h2>
+            <h3 className="text-[#4a4a4a]">
+              {selectedOrder && selectedOrder.shippingAddress?.fullname}
+            </h3>
+            <h3 className="text-[#4a4a4a]">
               {selectedOrder &&
                 `${selectedOrder.shippingAddress.address1}, ${selectedOrder.shippingAddress.address2}, ${selectedOrder.shippingAddress?.address3}`}
-            </h5>
+            </h3>
 
-            <h5>
+            <h3 className="text-[#4a4a4a]">
               {selectedOrder &&
                 getStateName(
                   selectedOrder?.shippingAddress?.state,
                   selectedOrder?.shippingAddress?.country
                 )}
-            </h5>
-            <h5>
+            </h3>
+            <h3 className="text-[#4a4a4a]">
               {selectedOrder &&
                 getCountryName(selectedOrder?.shippingAddress?.country)}
-            </h5>
-            <h5>{selectedOrder?.shippingAddress?.zipcode}</h5>
-            <h5>{selectedOrder?.shippingAddress?.primaryNumber}</h5>
-            <h5>{selectedOrder?.shippingAddress?.alternateNumber}</h5>
+            </h3>
+            <h3 className="text-[#4a4a4a]">
+              {selectedOrder?.shippingAddress?.zipcode}
+            </h3>
+
+            <div className="flex items-center gap-2">
+              <span className="text-[#201f13]">Contacts Number:</span>
+              <div className="space-x-1 text-[#4a4a4a]">
+                <span>{selectedOrder?.shippingAddress?.primaryNumber}</span>
+                <span>/</span>
+                <span>{selectedOrder?.shippingAddress?.alternateNumber}</span>
+              </div>
+            </div>
           </div>
 
           <div className="mt-6 md:ml-6">
-            <h5 className="text-lg font-semibold">Payment Info :</h5>
-            <h5>{selectedOrder && formattedPrice(selectedOrder.totalPrice)}</h5>
-            <h5>Payment: {selectedOrder?.paymentInfo?.status || "Not Paid"}</h5>
+            <h2 className="text-lg font-semibold text-[#201f13]">
+              Payment Info
+            </h2>
+            <div className="flex items-center gap-2">
+              <span className="text-[#201f13] font-extralight">
+                Total Price:
+              </span>
+              <span className="font-extrabold tracking-wide">
+                {selectedOrder && formattedPrice(selectedOrder.totalPrice)}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-[#201f13] font-extralight">
+                Payment Status:
+              </span>
+              <span>{selectedOrder?.paymentInfo?.status || "Not Paid"}</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-[#201f13] font-extralight">
+                Payment Mode:
+              </span>
+              <span
+                className={`${
+                  selectedOrder?.paymentInfo?.status === "succeeded"
+                    ? "text-[#19e50b]"
+                    : selectedOrder?.paymentInfo?.status === "canceled"
+                    ? "text-[#f75e68]"
+                    : "text-orange-500"
+                } font-Poppins font-semibold`}
+              >
+                {selectedOrder?.paymentInfo?.paymentMethod === "COD"
+                  ? "Cash on Delivery"
+                  : "Online Payment"}
+              </span>
+            </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </section>
     </div>
   );
 }

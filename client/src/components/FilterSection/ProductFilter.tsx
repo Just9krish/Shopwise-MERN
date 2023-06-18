@@ -33,7 +33,7 @@ export default function ProductFilter() {
   }, [filters]);
 
   return (
-    <div className="space-y-6 p-4 lg:space-y-8 border shadow-md mb-10 lg:m-0">
+    <div className="space-y-6 p-4 lg:space-y-8 border bg-white shadow-md mb-10 lg:m-0">
       <div className="flex rounded border-2 items-center">
         <div className="flex items-center justify-center px-2.5 border-r">
           <span className="h-6 w-6 text-orange-500">

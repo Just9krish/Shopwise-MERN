@@ -1,14 +1,14 @@
-import loadable from "@loadable/component";
-import { useSearchParams } from "react-router-dom";
-import { useState, useEffect } from "react";
 import style from "../styles/style";
-import { IProduct } from "../Interface";
+import loadable from "@loadable/component";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import ProductFilter from "../components/FilterSection/ProductFilter";
+const ProductFilter = loadable(
+  () => import("../components/FilterSection/ProductFilter")
+);
 const Product = loadable(() => import("../components/Product/Product"));
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<IProduct[]>([]);
   const { allProducts } = useAppSelector((state) => state.allProducts);
   const dispatch = useAppDispatch();
   const { filteredProducts, filters, sort_value } = useAppSelector(
@@ -51,11 +51,19 @@ export default function ProductsPage() {
           <div className="lg:grid lg:grid-cols-4 gap-8 lg:min-h-screen">
             <ProductFilter />
             <div className="lg:col-span-3">
-              <div className="grid grid-cols-1 gap-8 max-w-xs mx-auto md:grid-cols-3 md:max-w-5xl md:gap-y-11">
-                {filteredProducts?.map((product, idx) => (
-                  <Product key={idx} product={product} />
-                ))}
-              </div>
+              {filteredProducts.length > 0 ? (
+                <div className="grid grid-cols-1 gap-8 max-w-xs mx-auto md:grid-cols-3 md:max-w-5xl md:gap-y-11">
+                  {filteredProducts?.map((product, idx) => (
+                    <Product key={idx} product={product} />
+                  ))}
+                </div>
+              ) : (
+                <div className="h-full">
+                  <p className="text-2xl mt-14 text-center">
+                    No product with this filter.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         )}
