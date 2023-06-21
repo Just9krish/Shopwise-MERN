@@ -365,3 +365,54 @@ exports.getShopAllOrders = async (req, res, next) => {
     next(new ErrorHandler(error.message, 500));
   }
 };
+
+async function updateProductStockAndSoldOut(id, quantity) {
+  const product = await Product.findById(id);
+  product.stock = product.stock - quantity;
+  product.sold_out = product.sold_out + quantity;
+  await product.save({ validateBeforeSave: false });
+}
+
+// update order status
+exports.updateOrderStatus = async (req, res, next) => {
+  try {
+    const orderId = req.params.orderId;
+    const { orderStatus } = req.body;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return next(new ErrorHandler("Order does not exist", 404));
+    }
+
+    if (order.orderStatus === orderStatus) {
+      return next(
+        new ErrorHandler(`Order is already in "${orderStatus}"`, 400)
+      );
+    }
+
+    if (orderStatus === "Shipped") {
+      for (const item of order.cart) {
+        await updateProductStockAndSoldOut(item.product, item.quantity);
+      }
+    }
+
+    order.orderStatus = orderStatus;
+
+    if (orderStatus === "Delivered") {
+      order.deliveredAt = Date.now();
+      order.paymentInfo.status = "succeeded";
+    }
+
+    await order.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      success: true,
+      message: "Order updated successfully",
+      order,
+    });
+  } catch (error) {
+    console.log(error);
+    next(new ErrorHandler(error.message, 500));
+  }
+};

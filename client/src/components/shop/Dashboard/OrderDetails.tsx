@@ -40,7 +40,7 @@ export default function OrderDetails() {
   async function orderUpdateHandler() {
     try {
       const res = await axios.put(
-        `${server}`,
+        `${server}/shops/${seller._id}/orders/${selectedOrder?._id}`,
         { orderStatus },
         { withCredentials: true }
       );
@@ -51,8 +51,9 @@ export default function OrderDetails() {
     } catch (e: AxiosError | any) {
       if (e.response) {
         toast.error(e.response.data.message);
+      } else {
+        toast.error(e.message);
       }
-      toast.error(e.message);
     }
   }
 

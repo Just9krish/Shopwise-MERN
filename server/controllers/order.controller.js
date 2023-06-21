@@ -94,5 +94,3 @@ exports.getOrders = async (req, res, next) => {
     next(new ErrorHandler(error.message, 500));
   }
 };
-
-// get all order of user
