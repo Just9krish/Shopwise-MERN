@@ -11,7 +11,7 @@ export default function OrderDetailsPage() {
   return (
     <>
       <ShopHeader />
-      <section className={`min-h-screen ${style.section}`}>
+      <section className={`${style.section}`}>
         <OrderDetails />
       </section>
     </>
