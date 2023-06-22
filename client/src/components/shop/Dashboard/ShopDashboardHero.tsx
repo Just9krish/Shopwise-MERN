@@ -1,13 +1,90 @@
-import { AiOutlineMoneyCollect } from "react-icons/ai";
+import { DataGrid, GridCellParams } from "@mui/x-data-grid";
+import { useEffect } from "react";
+import { AiOutlineArrowRight, AiOutlineMoneyCollect } from "react-icons/ai";
 import { MdBorderClear } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { formattedPrice } from "../../../helper/formatPrice";
-import { useAppSelector } from "../../../hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { getAllOrdersOfSeller } from "../../../redux/actions/ordersActions";
+import { getShopAllProducts } from "../../../redux/actions/productActions";
 import style from "../../../styles/style";
+
+type row = {
+  id: string;
+  total: string;
+  quantity: number;
+  status: string;
+};
 
 export default function ShopDashboardHero() {
   const { shopOrders } = useAppSelector((state) => state.orders);
   const { products } = useAppSelector((state) => state.products);
+  const { seller } = useAppSelector((state) => state.seller);
+  const dispatch = useAppDispatch();
+
+  const columns = [
+    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+
+    {
+      field: "status",
+      headerName: "Status",
+      minWidth: 130,
+      flex: 0.7,
+      cellClassName: (params: GridCellParams) => {
+        return params.value === "Delivered" ? "greenColor" : "redColor";
+      },
+    },
+    {
+      field: "quantity",
+      headerName: "Quantity",
+      type: "number",
+      minWidth: 130,
+      flex: 0.7,
+    },
+
+    {
+      field: "total",
+      headerName: "Total",
+      type: "number",
+      minWidth: 130,
+      flex: 0.8,
+    },
+
+    {
+      field: " ",
+      flex: 1,
+      minWidth: 150,
+      headerName: "",
+      type: "number",
+      sortable: false,
+      renderCell: (params: GridCellParams) => {
+        return (
+          <>
+            <Link to={`/dashboard/order/${params.id}`}>
+              <AiOutlineArrowRight size={20} />
+            </Link>
+          </>
+        );
+      },
+    },
+  ];
+
+  const row: row[] = [];
+
+  shopOrders &&
+    shopOrders.forEach((order) => {
+      row.push({
+        id: order._id,
+        quantity: order.cart.reduce((acc, item) => acc + item.quantity, 0),
+        total: formattedPrice(order.totalPrice),
+        status: order.orderStatus,
+      });
+    });
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfSeller(seller._id));
+    dispatch(getShopAllProducts(seller._id));
+  }, [dispatch]);
 
   return (
     <div className="p-8 w-full space-y-12">
@@ -90,7 +167,14 @@ export default function ShopDashboardHero() {
       <div className="space-y-4">
         <h4 className="text-2xl font-semibold font-Poppins">Latest Orders</h4>
 
-        <div className="w-full bg-white shadow px-2 py-5 rounded"></div>
+        <div className="w-full bg-white shadow px-2 py-5 rounded">
+          <DataGrid
+            columns={columns}
+            rows={row}
+            autoHeight
+            disableRowSelectionOnClick
+          />
+        </div>
       </div>
     </div>
   );
