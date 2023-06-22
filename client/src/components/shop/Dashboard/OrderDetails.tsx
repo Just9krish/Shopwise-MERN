@@ -246,7 +246,7 @@ export default function OrderDetails() {
                 <select
                   value={orderStatus}
                   onChange={(e) => setOrderStatus(e.target.value)}
-                  className="w-56 mt-2 border rounded"
+                  className="w-56 mt-2 border rounded py-1.5 px-3"
                 >
                   {orderStatusList.map((status, index) => (
                     <option key={index} value={status}>
@@ -255,13 +255,20 @@ export default function OrderDetails() {
                   ))}
                 </select>
 
-                <select className="w-56 mt-2 border rounded" name="" id="">
+                <select
+                  className="w-56 mt-2 border rounded py-1.5 px-3"
+                  name=""
+                  id="refund"
+                >
                   {refundStatusList.map((status, index) => (
                     <option key={index} value={status}>
                       {status}
                     </option>
                   ))}
                 </select>
+                <label className="text-[#4a4a4a] text-sm" htmlFor="refund">
+                  *This feature is not working right now.
+                </label>
               </div>
 
               <button
